@@ -20,7 +20,7 @@ namespace Graphy
 
             var amplitude = 1f;
             var frequency = 1f;
-            var total = 0f;
+            var sum = 0f;
             Node result = null;
             for(var i = 0; i < octaves; i++)
             {
@@ -34,12 +34,12 @@ namespace Graphy
 
                 result = result?.Add(octave) ?? octave;
 
-                total += amplitude;
+                sum += amplitude;
                 amplitude *= config.Persistence;
                 frequency *= config.Lacunarity;
             }
 
-            return result.Divide(total);
+            return result.Divide(sum);
         }
     }
 

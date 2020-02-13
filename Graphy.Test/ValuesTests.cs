@@ -22,5 +22,12 @@ namespace Graphy.Test
             var node = Values.RadialGradient();
             Render(node, "RadialGradient.png");
         }
+
+        [TestMethod]
+        public void Checkers()
+        {
+            var node = Values.Checkers();
+            Render(node.Scale(.3f), "Checkers.png");
+        }
     }
 }
