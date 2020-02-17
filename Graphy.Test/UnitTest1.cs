@@ -65,6 +65,7 @@ namespace Graphy.Test
                 }
             }
 
+            var sediment = 0f;
             for(var d = 0; d < 1000; d++)
             {
                 var dropletX = (int)(rng.NextDouble() * columns);
@@ -107,6 +108,11 @@ namespace Graphy.Test
                     {
                         break;
                     }
+
+                    var deltaY = currentHeight - lowest;
+                    var deltaX = (dropletX != lowestX && dropletY != lowestY) ? MathF.Sqrt(2) : 1;
+                    deltaX /= 1000;
+                    var angle = MathF.Atan(deltaY / deltaX);
 
                     dropletX = lowestX;
                     dropletY = lowestY;

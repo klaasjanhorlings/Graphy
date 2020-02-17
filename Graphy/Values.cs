@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Graphy
@@ -23,5 +24,53 @@ namespace Graphy
         public static Node Sine() => (float x, float y) => MathF.Sin(x) / 2 + .5f;
 
         public static Node Checkers() => (float x, float y) => (MathF.Floor(x) % 2 == 0) ^ (MathF.Floor(y) % 2 == 0) ? 1f : 0f;
+
+        public static Node Bitmap(Bitmap bitmap, Action<BitmapConfiguration> configure = null)
+        {
+            if (bitmap == null)
+                throw new ArgumentNullException(nameof(bitmap));
+
+            var config = new BitmapConfiguration();
+            configure?.Invoke(config);
+
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+
+            float ratioX = 2 / width;
+            float ratioY = 2 / height;
+            if (config.Viewport == Viewport.FitInside)
+            {
+                ratioX = ratioY = MathF.Min(ratioX, ratioY);
+            } 
+            else if (config.Viewport == Viewport.FitOutside)
+            {
+                ratioX = ratioY = MathF.Max(ratioX, ratioY);
+            }
+
+            Node node = (float x, float y) =>
+            {
+                var rx = (int)MathF.Max(0, MathF.Min(width - 1, x * ratioX));
+                var ry = (int)MathF.Max(0, MathF.Min(height - 1, y * ratioY));
+                return (float)bitmap.GetPixel(rx, ry).R / 0xff;
+            };
+        }
+    }
+
+    public class BitmapConfiguration
+    {
+        //public Sampling Sampling { get; set; }
+        public Viewport Viewport { get; set; } = Viewport.FitOutside;
+    }
+
+    public enum Sampling
+    {
+        NearestNeighbour
+    }
+
+    public enum Viewport
+    {
+        FitInside,
+        FitOutside,
+        Stretch
     }
 }
